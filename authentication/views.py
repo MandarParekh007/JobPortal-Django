@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import login,authenticate
 from .forms import CustomUserCreationForm
+from .decorators import *
 
 
 # Create your views here.
@@ -32,5 +33,6 @@ def login_view(request):
     
     return render(request, 'login.html')
 
+@login_required
 def home_view(request):
     return render(request,'home.html')
