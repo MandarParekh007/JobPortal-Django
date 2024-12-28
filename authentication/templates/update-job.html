@@ -59,11 +59,11 @@
 
             <!-- Title field -->
             <label for="title">Job Title:</label>
-            <input type="text" id="title" name="title" value="{{ form.title.value }}" required>
+            <input type="text" id="title" name="title" value="{{ job.title }}" required>
 
             <!-- Description field -->
             <label for="description">Job Description:</label>
-            <textarea id="description" name="description" required>{{ form.description.value }}</textarea>
+            <textarea id="description" name="description" required>{{ job.description }}</textarea>
 
             <!-- Submit Button -->
             <button type="submit">Update Job</button>
