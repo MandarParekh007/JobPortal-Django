@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import login,authenticate
 from .forms import CustomUserCreationForm
 from .decorators import *
+from jobs.forms import CompanyForm
+from jobs.models import Company
 
 
 # Create your views here.
@@ -35,4 +37,19 @@ def login_view(request):
 
 @login_required
 def home_view(request):
-    return render(request,'home.html')
+    if Company.objects.filter(user = request.user).exists():
+        return render(request,'home.html',{'jobs':'Company Registered','user':request.user})
+    else:
+        if request.method == 'POST':
+            form = CompanyForm(request.POST)
+            if form.is_valid():
+                company = form.save(commit=False)
+                company.user = request.user
+                company.save()
+                return render(request,'home.html',{'jobs':'','user':request.user})
+            else:
+                form = CompanyForm()
+                return render(request,'company_registration.html',{'form':form})
+        else:
+            return render(request,'company_registration.html')
+
