@@ -6,16 +6,16 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
+    <form action="">
+        title:
+        <input type="text" name="title">
 
-        Name:
-        <input type="text" name="title"/>
-
-        Description:
+        description
         <input type="text" name="description">
 
-        <button type="submit" name="description">submit</button>
+        <input type="hidden" name="company_id" value="{{ company.id }}">
+
+        <button type="button">submit</button>
     </form>
 </body>
 </html>

@@ -21,5 +21,6 @@ from authentication.views import home_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/',include('authentication.urls')),
-    path('home/',home_view,name="home")
+    path('home/',home_view,name="home"),
+    path('job/',include('jobs.urls')),
 ]
