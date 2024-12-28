@@ -42,5 +42,16 @@ def update_job(request, id):
             return redirect('home')
     else:
         return render(request,'update-job.html',{'job':job})
+    
+
+@login_required
+def delete_job(request, id):
+    job = get_object_or_404(Job, id=id)
+
+    job.delete()
+
+    return redirect('home')
+    
+
 
 
