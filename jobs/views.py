@@ -8,13 +8,12 @@ def create_job(request):
     if request.method == 'POST':
         # Retrieve the company associated with the logged-in user
         company = Company.objects.filter(user=request.user).first()  # Use .first() to get the first result (or None if not found)
-        
+
         # Create the form with POST data
         form = JobForm(request.POST)
 
         if form.is_valid():
-            print("Form is valid")
-            job = form.save(commit=False)  
+            job = form.save(commit=False)
             job.company = company  # Link the job to the company of the logged-in user
             job.save()  # Save the job
 
@@ -30,4 +29,4 @@ def create_job(request):
         form = JobForm()
 
     # Render the form in the template
-    return render(request, 'company_registration.html', {'form': form})
+    return render(request, 'job-register.html', {'form': form})
