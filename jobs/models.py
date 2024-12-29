@@ -14,7 +14,15 @@ class Company(models.Model):
 class Job(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    salary = models.IntegerField()
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs',null=False)  # One company can have many jobs (for total participation the foreignky has null constraint)
 
     def __str__(self):
         return self.title
+
+class Tag(models.Model):
+    tag = models.CharField(max_length=35)
+    job = models.ForeignKey(Job,on_delete=models.CASCADE,null=False)
+
+    def __str__(self):
+        return self.tag

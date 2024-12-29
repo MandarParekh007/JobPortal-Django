@@ -1,5 +1,5 @@
 from django import forms
-from .models import Company, Job
+from .models import Company, Job,Tag
 
 class CompanyForm(forms.ModelForm):
     class Meta:
@@ -8,6 +8,11 @@ class CompanyForm(forms.ModelForm):
 
 
 class JobForm(forms.ModelForm):
+    tags = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'placeholder': 'Enter tags separated by commas'}),
+        label="Tags"
+    )   
     class Meta:
         model = Job
-        fields = ['title', 'description']  # Explicitly specify fields
+        fields = ['title', 'description','salary','tags']

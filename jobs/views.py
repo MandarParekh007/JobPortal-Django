@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import JobForm
-from .models import Company, Job
+from .models import Company, Job, Tag
 from authentication.decorators import *
 
 @login_required
@@ -15,6 +15,13 @@ def create_job(request):
             job = form.save(commit=False)
             job.company = company 
             job.save()  
+
+            tags = form.cleaned_data.get('tags')
+
+            if tags:
+                tag_list = [tag.strip() for tag in tags.split(',')]
+                for tag in tag_list:
+                    Tag.objects.get_or_create(tag=tag,job=job)
 
         
             return redirect('home')
@@ -35,13 +42,28 @@ def update_job(request, id):
     job = get_object_or_404(Job, id=id)
 
     if request.method == 'POST':
-        form = JobForm(request.POST,instance=job)
+        form = JobForm(request.POST, instance=job)
 
         if form.is_valid():
-            form.save()
+            job = form.save()  
+
+            
+            tags = form.cleaned_data.get('tags')
+            if tags:
+                tag_list = [tag.strip() for tag in tags.split(',')] 
+
+                Tag.objects.filter(job=job).delete()
+
+                for tag in tag_list:
+                    Tag.objects.get_or_create(tag=tag, job=job)
+
             return redirect('home')
+
     else:
-        return render(request,'update-job.html',{'job':job})
+        form = JobForm(instance=job)
+
+    return render(request, 'update-job.html', {'form': form, 'job': job})
+
     
 
 @login_required
