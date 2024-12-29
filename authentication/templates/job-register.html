@@ -4,30 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Job</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
 
-    <h1>Create Job</h1>
-
-    <form method="post" action="">
-        {% csrf_token %}
-        <!-- Title field -->
-        <label for="title">Title:</label>
-        <input type="text" name="title" id="title" required/>
-
-        <!-- Description field -->
-        <label for="description">Description:</label>
-        <input name="description" id="description" required />
-
-        <label for="salary">Salary </label>
-        <input type="number" name="salary" min="0" required/>
-
-        <label for="tags"> Tags:</label>
-        <textarea id="tags" name="tags"> </textarea>
+    <div class="bg-dark text-white p-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="fs-4">Welcome, {{request.user.first_name}}</div>
+            <div>
+                <a href="{% url 'logout' %}" class="btn btn-outline-light ms-2">Logout</a>
+            </div>
+        </div>
+    </div>
 
 
-        <button type="submit">Submit</button>
-    </form>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">Create Job</h3>
+                        {{form.errors}}
+                        <form method="post" action="">
+                            {% csrf_token %}
 
+                           
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Job Title</label>
+                                <input type="text" name="title" id="title" class="form-control" required/>
+                            </div>
+
+                           
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Job Description</label>
+                                <textarea name="description" id="description" class="form-control" rows="4" required></textarea>
+                            </div>
+
+                           
+                            <div class="mb-3">
+                                <label for="salary" class="form-label">Salary</label>
+                                <input type="number" name="salary" id="salary" class="form-control" min="0" required/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tags" class="form-label">Tags (comma separated)</label>
+                                <textarea id="tags" name="tags" class="form-control" rows="3" placeholder="e.g. Python, Django, Web Development"></textarea>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success">Create Job</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-DBdycFZjmzdfoy6kLWxr9DdGHTiIkMNau0Fyn5AZm12ByfX4DBcoUzn8yBo8Mprz" crossorigin="anonymous"></script>
 </body>
 </html>
