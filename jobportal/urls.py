@@ -23,4 +23,5 @@ urlpatterns = [
     path('auth/',include('authentication.urls')),
     path('home/',home_view,name="home"),
     path('job/',include('jobs.urls')),
+    path('',home_view)
 ]

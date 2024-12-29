@@ -41,34 +41,57 @@ def create_job(request):
 def update_job(request, id):
     job = get_object_or_404(Job, id=id)
 
+    company = Company.objects.filter(user=request.user).first()
+    if job.company != company:
+        return JsonResponse({'error':'401','message':'something went wrong'})
+
+
     if request.method == 'POST':
         form = JobForm(request.POST, instance=job)
 
         if form.is_valid():
-            job = form.save()  
+            job = form.save()  # Save the updated job
 
-            
+            # Process the tags input from the form
             tags = form.cleaned_data.get('tags')
             if tags:
-                tag_list = [tag.strip() for tag in tags.split(',')] 
+                tag_list = [tag.strip() for tag in tags.split(',')]  # Split and clean the tags
 
+                # Remove existing tags for this job
                 Tag.objects.filter(job=job).delete()
 
+                # Add new tags
                 for tag in tag_list:
                     Tag.objects.get_or_create(tag=tag, job=job)
 
             return redirect('home')
+        else:
+            print(form.errors)
+
+        # If the form is invalid, return the same page with error messages
+        return render(request, 'update-job.html', {'form': form, 'job': job})
 
     else:
+        # For GET request, fetch existing tags for this job
+        tags = Tag.objects.filter(job=job)  # Get tags associated with the job
         form = JobForm(instance=job)
 
-    return render(request, 'update-job.html', {'form': form, 'job': job})
+        # Always pass 'tags' to the template, whether it's a POST or GET request
+        return render(request, 'update-job.html', {'form': form, 'job': job, 'tags': tags})
+
+
+
 
     
 
 @login_required
 def delete_job(request, id):
+    
     job = get_object_or_404(Job, id=id)
+
+    company = Company.objects.filter(user=request.user).first()
+    if job.company != company:
+        return JsonResponse({'error':'401','message':'something went wrong'})
 
     job.delete()
 

@@ -64,6 +64,16 @@
             <!-- Description field -->
             <label for="description">Job Description:</label>
             <textarea id="description" name="description" required>{{ job.description }}</textarea>
+            
+            <label for="salary">Salary</label>
+            <input type="number" name="salary" value="{{job.salary}}">
+            <!-- Tags field -->
+            <label for="tags">Tags:</label>
+            <textarea id="tags" name="tags">
+                {% for tag in tags %}
+                    {{ tag.tag }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </textarea>
 
             <!-- Submit Button -->
             <button type="submit">Update Job</button>

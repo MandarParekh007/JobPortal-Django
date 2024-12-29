@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login,authenticate,logout
 from .forms import CustomUserCreationForm
 from .decorators import *
 from jobs.forms import CompanyForm
@@ -50,8 +50,14 @@ def home_view(request):
                 company.save()
                 return render(request,'home.html',{'jobs':'','user':request.user})
             else:
+                print(form.errors)
                 form = CompanyForm()
                 return render(request,'company_registration.html',{'form':form})
         else:
             return render(request,'company_registration.html')
 
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('login')
