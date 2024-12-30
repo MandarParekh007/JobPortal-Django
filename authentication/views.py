@@ -4,6 +4,7 @@ from .forms import CustomUserCreationForm
 from .decorators import *
 from jobs.forms import CompanyForm
 from jobs.models import Company, Job
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -39,10 +40,15 @@ def login_view(request):
 
 @login_required
 def home_view(request):
+    page_num = request.GET.get('page',1)
     jobs = Job.objects.all()
+    p = Paginator(jobs,5)
+    jobs = p.page(page_num).object_list
+    page_obj = p.get_page(page_num)
+
     if Company.objects.filter(user = request.user).exists():
         company = Company.objects.filter(user = request.user)[0]
-        return render(request,'home.html',{'jobs':jobs,'user':request.user,'company':company})
+        return render(request,'home.html',{'jobs':jobs,'user':request.user,'company':company,'page_obj':page_obj})
     else:
         if request.method == 'POST':
             form = CompanyForm(request.POST)
@@ -50,7 +56,7 @@ def home_view(request):
                 company = form.save(commit=False)
                 company.user = request.user
                 company.save()
-                return render(request,'home.html',{'jobs':jobs,'user':request.user,'company':company})
+                return render(request,'home.html',{'jobs':jobs,'user':request.user,'company':company,'page_obj':page_obj})
             else:
                 print(form.errors)
                 form = CompanyForm()
