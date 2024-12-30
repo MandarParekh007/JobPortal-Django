@@ -39,9 +39,9 @@ def login_view(request):
 
 @login_required
 def home_view(request):
+    jobs = Job.objects.all()
     if Company.objects.filter(user = request.user).exists():
         company = Company.objects.filter(user = request.user)[0]
-        jobs = Job.objects.filter(company=company)
         return render(request,'home.html',{'jobs':jobs,'user':request.user,'company':company})
     else:
         if request.method == 'POST':
@@ -50,7 +50,7 @@ def home_view(request):
                 company = form.save(commit=False)
                 company.user = request.user
                 company.save()
-                return render(request,'home.html',{'jobs':'','user':request.user,'company':company})
+                return render(request,'home.html',{'jobs':jobs,'user':request.user,'company':company})
             else:
                 print(form.errors)
                 form = CompanyForm()

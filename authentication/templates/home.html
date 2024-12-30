@@ -49,10 +49,12 @@
                             <p class="card-text">{{ job.description|truncatewords:20 }}</p>
                             <p class="card-text"><strong>Salary: </strong>${{ job.salary }}</p>
                         </div>
+                        {% if job.company == company %}
                         <div class="card-footer d-flex justify-content-between">
                             <a href="/job/update/{{ job.id }}/" class="btn btn-warning">Update</a>
                             <a href="/job/delete/{{ job.id }}/" class="btn btn-danger">Delete</a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

@@ -39,7 +39,6 @@
             color: #ff4d4d;
         }
 
-        /* Additional styles for form and buttons */
         .container {
             max-width: 600px;
             margin-top: 50px;
@@ -49,13 +48,13 @@
 </head>
 <body>
 
-    <!-- Hardcoded Navbar (Toolbar) -->
+
     <div class="bg-dark text-white p-3">
         <div class="d-flex justify-content-between align-items-center">
             <div class="fs-4">Welcome, Guest</div>
             <div>
-                <a href="/auth/login/" class="btn btn-outline-light ms-2">Sign In</a>
-                <a href="/auth/register/" class="btn btn-outline-light ms-2">Register</a>
+                <a href="/auth/logout/" class="btn btn-outline-light ms-2">Logout</a>
+                <!-- <a href="/auth/register/" class="btn btn-outline-light ms-2">Register</a> -->
             </div>
         </div>
     </div>
@@ -69,28 +68,25 @@
                 <form method="post">
                     {% csrf_token %}
 
-                    <!-- Title Field -->
+                  
                     <div class="mb-3">
                         <label for="title" class="form-label">Job Title</label>
                         <input type="text" id="title" name="title" class="form-control" value="{{ job.title }}" required>
                     </div>
 
-                    <!-- Description Field -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Job Description</label>
                         <textarea id="description" name="description" class="form-control" rows="4" required>{{ job.description }}</textarea>
                     </div>
 
-                    <!-- Salary Field -->
                     <div class="mb-3">
                         <label for="salary" class="form-label">Salary</label>
                         <input type="number" id="salary" name="salary" class="form-control" value="{{ job.salary }}" required>
                     </div>
 
-                    <!-- Display Tags -->
                     <div class="mb-3">
                         <label for="tags" class="form-label">Tags</label>
-                        <!-- Display existing tags as chips with remove button -->
+         
                         <div class="tag-container" id="tags-container">
                             {% for tag in tags %}
                                 <div class="tag-item" id="tag-{{ tag.id }}">
@@ -101,13 +97,12 @@
                         </div>
                     </div>
 
-                    <!-- Textarea for adding new tags -->
+       
                     <div class="mb-3">
                         <label for="tags_input" class="form-label">Add New Tags (Comma Separated)</label>
                         <textarea id="tags_input" name="tags" class="form-control" rows="3" placeholder="Enter tags, separated by commas"></textarea>
                     </div>
 
-                    <!-- Submit Button -->
                     <div class="d-grid gap-2">
                         <button type="button" onclick="solve()" class="btn btn-success">Update Job</button>
                     </div>
@@ -116,10 +111,10 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS and custom script to handle tag removal -->
+   
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-DBdycFZjmzdfoy6kLWxr9DdGHTiIkMNau0Fyn5AZm12ByfX4DBcoUzn8yBo8Mprz" crossorigin="anonymous"></script>
     <script>
-        // An array to store existing tags
+        
         let tagsArray = [{% for tag in tags %}'{{ tag.tag }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
 
         // Function to remove a tag from the UI and update the tagsArray
@@ -129,12 +124,11 @@
                 tagElement.remove();
             }
 
-            // Remove the tag from the tagsArray
+            
             tagsArray = tagsArray.filter(existingTag => existingTag !== tag);
-            // updateTagsInput();
+           
         }
 
-        // Update the tags input field (textarea) with the combined tags (existing + new)
         function updateTagsInput() {
             const tagsInput = document.getElementById("tags_input");
             tagsInput.value = tagsArray.join(', ');
@@ -142,16 +136,15 @@
 
         // The function called when the user clicks "Update Job" to combine existing and new tags
         function solve() {
-            // Get new tags entered by the user
+          
             const newTags = document.getElementById("tags_input").value.split(',').map(tag => tag.trim()).filter(tag => tag);
             
-            // Combine the existing tags with the new tags
+           
             tagsArray = [...tagsArray, ...newTags];
 
-            // Update the tags input field with the new combined list
+            
             updateTagsInput();
 
-            // You can now submit the form, but the tags will be updated automatically
             document.forms[0].submit();
         }
     </script>

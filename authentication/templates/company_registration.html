@@ -3,19 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Styled Form</title>
+    <!-- Bootstrap CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
 
-        Name:
-        <input type="text" name="name"/>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card" style="width: 25rem;">
+            <div class="card-body">
+                <h5 class="card-title text-center mb-4">Company Registration</h5>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Name Input -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name:</label>
+                        <input type="text" class="form-control" name="name" id="name" required placeholder="Enter your name">
+                    </div>
 
-        Description:
-        <input type="text" name="description">
+                    <!-- Description Input -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description:</label>
+                        <input type="text" class="form-control" name="description" id="description" required placeholder="Enter a description">
+                    </div>
 
-        <button type="submit" name="description">submit</button>
-    </form>
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (optional for form behavior like validation) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

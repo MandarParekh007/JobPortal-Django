@@ -4,6 +4,7 @@ from .models import Company, Job, Tag
 from authentication.decorators import *
 
 @login_required
+@company_required
 def create_job(request):
     if request.method == 'POST':
 
@@ -38,6 +39,7 @@ def create_job(request):
 
 
 @login_required
+@company_required
 def update_job(request, id):
     job = get_object_or_404(Job, id=id)
 
@@ -85,6 +87,7 @@ def update_job(request, id):
     
 
 @login_required
+@company_required
 def delete_job(request, id):
     
     job = get_object_or_404(Job, id=id)
