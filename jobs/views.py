@@ -7,7 +7,7 @@ from authentication.decorators import *
 @company_required
 def create_job(request):
     if request.method == 'POST':
-
+        #
         company = Company.objects.filter(user=request.user).first()  
 
         form = JobForm(request.POST)
