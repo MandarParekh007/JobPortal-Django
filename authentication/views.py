@@ -1,72 +1,80 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth import login,authenticate,logout
-from .forms import CustomUserCreationForm
-from .decorators import *
-from jobs.forms import CompanyForm
-from jobs.models import Company, Job
+"""
+This Module Is For User Authentication
+"""
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate, logout
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
+from jobs.models import Company, Job
+from jobs.forms import CompanyForm
+from .forms import CustomUserCreationForm
 
-# Create your views here.
 
 def register(request):
+    """
+    This is for Registering User
+    """
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
-
         if form.is_valid():
             user = form.save()
-            login(request,user)
+            login(request, user)
             return redirect('home')
-        else:
-            print(form.errors)
+        print(form.errors)
     else:
         form = CustomUserCreationForm()
-    
-    return render(request, 'register.html', {'form' : form})
+    return render(request, 'register.html', {'form': form})
+
 
 def login_view(request):
+    """
+    This is for login User
+    """
     if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        user = authenticate(request,email=email,password=password)
-
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
         if user is not None:
-            login(request,user)
+            login(request, user)
             return redirect('home')
-        else:
-            return render(request,'login.html',{'error':"Invalid email or Password"})
-    
+        return render(request, 'login.html', {'error': "Invalid email or Password"})
     return render(request, 'login.html')
+
 
 @login_required
 def home_view(request):
-    page_num = request.GET.get('page',1)
-    jobs = Job.objects.all()
-    p = Paginator(jobs,5)
-    jobs = p.page(page_num).object_list
-    page_obj = p.get_page(page_num)
+    """
+    Home Screen
+    """
+    page_num = request.GET.get('page', 1)
+    jobs = Job.objects.all()  # pylint: disable=no-member
+    paginator = Paginator(jobs, 5)
+    page_obj = paginator.get_page(page_num)
+    jobs = page_obj.object_list
 
-    if Company.objects.filter(user = request.user).exists():
-        company = Company.objects.filter(user = request.user)[0]
-        return render(request,'home.html',{'jobs':jobs,'user':request.user,'company':company,'page_obj':page_obj})
-    else:
-        if request.method == 'POST':
-            form = CompanyForm(request.POST)
-            if form.is_valid():
-                company = form.save(commit=False)
-                company.user = request.user
-                company.save()
-                return render(request,'home.html',{'jobs':jobs,'user':request.user,'company':company,'page_obj':page_obj})
-            else:
-                print(form.errors)
-                form = CompanyForm()
-                form.errors = 'invalid Email or Password'
-                return render(request,'company_registration.html',{'form':form})
-        else:
-            return render(request,'company_registration.html')
+    if Company.objects.filter(user=request.user).exists():  # pylint: disable=no-member
+        company = Company.objects.filter(user=request.user).first()  # pylint: disable=no-member
+        res_obj = {'jobs': jobs, 'user': request.user, 'company': company, 'page_obj': page_obj}
+        return render(request, 'home.html', res_obj)
 
+    if request.method == 'POST':
+        form = CompanyForm(request.POST)
+        if form.is_valid():
+            company = form.save(commit=False)
+            company.user = request.user
+            company.save()
+            res_obj = {'jobs': jobs, 'user': request.user, 'company': company, 'page_obj': page_obj}
+            return render(request, 'home.html', res_obj)
+        print(form.errors)
+    form = CompanyForm()
+    return render(request, 'company_registration.html', {'form': form})
 
 @login_required
 def logout_view(request):
+    """
+    Logout view
+    """
     logout(request)
     return redirect('login')
