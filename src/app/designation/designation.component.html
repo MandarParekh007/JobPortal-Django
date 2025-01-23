@@ -1,0 +1,22 @@
+<div class="row">
+    @if(isLoader === true){
+        <div class="spinner-border text-center col-12" role="status">
+        </div>
+    }
+    @else {
+        
+        @for (item of designationList; track $index) {
+            <div class="col-3">
+                <div class="card">
+                    <div class="acrd-body">
+                        <h4 class="card-title">{{item.designation}}</h4>
+                                <a href="" class="card-link">Edit</a>
+                                <a href="" class="card-link">Delete</a>
+                            
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+</div>
